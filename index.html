@@ -26,7 +26,7 @@
             padding: 40px;
             border-radius: 10px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            max-width: 400px;
+            max-width: 900px;
             width: 100%;
         }
 
@@ -203,6 +203,55 @@
             align-items: center;
             justify-content: center;
         }
+
+        .content-wrapper {
+            display: flex;
+            gap: 30px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .content-wrapper > div {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .info-box {
+            padding: 20px;
+            background-color: #e3f2fd;
+            border-radius: 5px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .info-box h3 {
+            color: #333;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .info-box a {
+            padding: 12px 24px;
+            background-color: #2196F3;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+            display: inline-block;
+        }
+
+        .info-box a:hover {
+            background-color: #1976D2;
+        }
+
+        .info-box a:active {
+            background-color: #1565C0;
+        }
     </style>
 </head>
 <body>
@@ -256,10 +305,20 @@
             </div>
         </div>
 
-        <div class="generator">
-            <h3>Passwort-Generator</h3>
-            <button class="generator-btn" id="generateBtn">Sicheres Passwort generieren</button>
-            <div class="generated-password" id="generatedPassword"></div>
+        <div class="content-wrapper">
+            <div>
+                <div class="generator">
+                    <h3>Passwort-Generator</h3>
+                    <button class="generator-btn" id="generateBtn">Sicheres Passwort generieren</button>
+                    <div class="generated-password" id="generatedPassword"></div>
+                </div>
+            </div>
+            <div>
+                <div class="info-box">
+                    <h3>Erfahren Sie mehr über sichere Passwörter</h3>
+                    <a href="https://www.bing.com/ck/a?!&&p=0a9403756cd9be3b67076aae8b96afe8f1de81d66b215765dec8a77e2fea6720JmltdHM9MTc2OTU1ODQwMA&ptn=3&ver=2&hsh=4&fclid=1b21367e-79f5-6edc-04bd-2091787e6f29&psq=Fraunhofer+wie+man+ein+starkes+Passwort+generiert&u=a1aHR0cHM6Ly9ibG9nLmFjYWRlbXkuZnJhdW5ob2Zlci5kZS9ibG9nYmVpdHJhZWdlL2xsY3Mtdm9yLWhhZWNrZXJuLXNjaHVldHplbi1zby1rcmVpZXJlbi1zaWUtZWluLXNpY2hlcmVzLXBhc3N3b3J0Lw" target="_blank">Zum Fraunhofer-Artikel</a>
+                </div>
+            </div>
         </div>
     </div>
 
