@@ -299,25 +299,24 @@
         }
 
         function hasSequentialCharacters(password) {
-            // Sequenzen auf der Tastatur definieren
-            const sequences = [
-                '123456789', '234567890',
-                'qwertyuiop', 'wertyuiop',
-                'asdfghjkl', 'sdfghjkl',
-                'zxcvbnm', 'xcvbnm',
-                // Rückwärts
-                '987654321', '098765432',
-                'poiuytrewq', 'poiuytrewq',
-                'lkjhgfdsa', 'lkjhgfdsa',
-                'mnbvcxz', 'mnbvcxz'
+            // QWERTZ-Tastaturlayout (deutsche Tastatur)
+            const rows = [
+                '1234567890',
+                'qwertzuiop',
+                'asdfghjklö',
+                'yxcvbnm'
             ];
 
             const lowerPassword = password.toLowerCase();
             
-            // Überprüfe alle Sequenzen
-            for (let seq of sequences) {
-                if (lowerPassword.includes(seq)) {
-                    return true; // Sequenz gefunden
+            // Überprüfe alle Reihen auf 5+ aufeinanderfolgende Zeichen
+            for (let row of rows) {
+                for (let i = 0; i <= row.length - 5; i++) {
+                    // Extrahiere 5 aufeinanderfolgende Zeichen
+                    const sequence = row.substring(i, i + 5);
+                    if (lowerPassword.includes(sequence)) {
+                        return true; // 5+ aufeinanderfolgende Zeichen gefunden
+                    }
                 }
             }
             
