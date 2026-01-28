@@ -152,6 +152,57 @@
         .toggle-password:hover {
             text-decoration: underline;
         }
+
+        .generator {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e8f5e9;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .generator h3 {
+            color: #333;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .generator-btn {
+            padding: 12px 24px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .generator-btn:hover {
+            background-color: #45a049;
+        }
+
+        .generator-btn:active {
+            background-color: #3d8b40;
+        }
+
+        .generated-password {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: white;
+            border: 2px solid #4caf50;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 16px;
+            color: #333;
+            word-break: break-all;
+            min-height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
 </head>
 <body>
@@ -204,6 +255,12 @@
                 <span>Keine sequentiellen Zeichen (z.B. 123, qwerty)</span>
             </div>
         </div>
+
+        <div class="generator">
+            <h3>Passwort-Generator</h3>
+            <button class="generator-btn" id="generateBtn">Sicheres Passwort generieren</button>
+            <div class="generated-password" id="generatedPassword"></div>
+        </div>
     </div>
 
     <script>
@@ -211,6 +268,8 @@
         const progressFill = document.getElementById('progressFill');
         const strengthLabel = document.getElementById('strengthLabel');
         const togglePasswordBtn = document.getElementById('togglePassword');
+        const generateBtn = document.getElementById('generateBtn');
+        const generatedPasswordDiv = document.getElementById('generatedPassword');
 
         const requirements = {
             length: document.getElementById('req-length'),
@@ -227,6 +286,16 @@
             const type = passwordInput.type === 'password' ? 'text' : 'password';
             passwordInput.type = type;
             togglePasswordBtn.textContent = type === 'password' ? 'Passwort anzeigen' : 'Passwort verbergen';
+        });
+
+        // Generate secure password
+        generateBtn.addEventListener('click', () => {
+            const newPassword = generateSecurePassword();
+            passwordInput.value = newPassword;
+            generatedPasswordDiv.textContent = newPassword;
+            
+            // Trigger input event to update strength checker
+            passwordInput.dispatchEvent(new Event('input'));
         });
 
         // Check password strength
@@ -321,6 +390,52 @@
             }
             
             return false; // Keine Sequenz gefunden
+        }
+
+        function generateSecurePassword() {
+            const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const lowercase = 'abcdefghijklmnopqrstuvwxyz';
+            const numbers = '0123456789';
+            const special = '!@#$%^&*()_+-=[]{}|;:,.<>?';
+            
+            let password = '';
+            let isValid = false;
+            
+            // Generiere solange bis alle Kriterien erfüllt sind
+            while (!isValid) {
+                password = '';
+                
+                // Garantiere mindestens ein Zeichen aus jeder Kategorie
+                password += uppercase[Math.floor(Math.random() * uppercase.length)];
+                password += lowercase[Math.floor(Math.random() * lowercase.length)];
+                password += numbers[Math.floor(Math.random() * numbers.length)];
+                password += special[Math.floor(Math.random() * special.length)];
+                
+                // Fülle auf mindestens 8 Zeichen auf
+                const allChars = uppercase + lowercase + numbers + special;
+                while (password.length < 8) {
+                    password += allChars[Math.floor(Math.random() * allChars.length)];
+                }
+                
+                // Mische das Passwort
+                password = password.split('').sort(() => Math.random() - 0.5).join('');
+                
+                // Überprüfe alle Kriterien
+                const checks = {
+                    length: password.length >= 8,
+                    uppercase: /[A-Z]/.test(password),
+                    lowercase: /[a-z]/.test(password),
+                    number: /[0-9]/.test(password),
+                    special: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password),
+                    unique: new Set(password).size >= 5,
+                    dummy: !hasSequentialCharacters(password)
+                };
+                
+                // Alle Kriterien erfüllt?
+                isValid = Object.values(checks).every(check => check === true);
+            }
+            
+            return password;
         }
 
         // Initialize with empty state
