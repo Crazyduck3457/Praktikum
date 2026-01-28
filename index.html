@@ -195,6 +195,10 @@
                 <span class="icon">✓</span>
                 <span>Mindestens 1 Sonderzeichen (!@#$%^&*)</span>
             </div>
+            <div class="requirement" id="req-unique">
+                <span class="icon">✓</span>
+                <span>Mindestens 5 unterschiedliche Zeichen</span>
+            </div>
         </div>
     </div>
 
@@ -209,7 +213,8 @@
             uppercase: document.getElementById('req-uppercase'),
             lowercase: document.getElementById('req-lowercase'),
             number: document.getElementById('req-number'),
-            special: document.getElementById('req-special')
+            special: document.getElementById('req-special'),
+            unique: document.getElementById('req-unique')
         };
 
         // Toggle password visibility
@@ -229,7 +234,8 @@
                 uppercase: /[A-Z]/.test(password),
                 lowercase: /[a-z]/.test(password),
                 number: /[0-9]/.test(password),
-                special: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
+                special: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password),
+                unique: new Set(password).size >= 5
             };
 
             // Update requirement indicators
@@ -238,12 +244,14 @@
             updateRequirementUI('lowercase', checks.lowercase);
             updateRequirementUI('number', checks.number);
             updateRequirementUI('special', checks.special);
+            updateRequirementUI('unique', checks.unique);
 
-            // Calculate strength score (0-5)
+            // Calculate strength score (0-6)
+            // Hinweis: Alle 6 Anforderungen müssen erfüllt sein für "sicher"
             const score = Object.values(checks).filter(Boolean).length;
             
             // Map score to steps (1-9)
-            const steps = score === 0 ? 0 : score <= 1 ? 1 : score <= 2 ? 3 : score <= 3 ? 5 : score <= 4 ? 7 : 9;
+            const steps = score === 0 ? 0 : score <= 1 ? 1 : score <= 2 ? 2 : score <= 3 ? 4 : score <= 4 ? 6 : score <= 5 ? 8 : 9;
             
             // Update progress bar
             updateProgressBar(steps);
