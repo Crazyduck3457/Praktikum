@@ -251,7 +251,7 @@
             const score = Object.values(checks).filter(Boolean).length;
             
             // Map score to steps (1-9)
-            const steps = score === 0 ? 0 : score <= 1 ? 1 : score <= 2 ? 2 : score <= 3 ? 4 : score <= 4 ? 6 : score <= 5 ? 8 : 9;
+            const steps = score === 0 ? 0 : score === 1 ? 1 : score === 2 ? 2 : score === 3 ? 3 : score === 4 ? 5 : score === 5 ? 7 : 9;
             
             // Update progress bar
             updateProgressBar(steps);
@@ -278,10 +278,10 @@
             if (steps <= 3) {
                 color = '#f44336'; // Red
                 label = 'unsicher';
-            } else if (steps <= 6) {
+            } else if (steps <= 7) {
                 color = '#ff9800'; // Orange
                 label = 'mittelsicher';
-            } else if (steps <= 9) {
+            } else if (steps >= 8) {
                 color = '#4caf50'; // Green
                 label = 'sicher';
             }
