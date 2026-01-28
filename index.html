@@ -199,6 +199,10 @@
                 <span class="icon">✓</span>
                 <span>Mindestens 5 unterschiedliche Zeichen</span>
             </div>
+            <div class="requirement" id="req-dummy">
+                <span class="icon">✓</span>
+                <span>Keine sequentiellen Zeichen (z.B. 123, qwerty)</span>
+            </div>
         </div>
     </div>
 
@@ -214,7 +218,8 @@
             lowercase: document.getElementById('req-lowercase'),
             number: document.getElementById('req-number'),
             special: document.getElementById('req-special'),
-            unique: document.getElementById('req-unique')
+            unique: document.getElementById('req-unique'),
+            dummy: document.getElementById('req-dummy')
         };
 
         // Toggle password visibility
@@ -235,7 +240,8 @@
                 lowercase: /[a-z]/.test(password),
                 number: /[0-9]/.test(password),
                 special: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password),
-                unique: new Set(password).size >= 5
+                unique: new Set(password).size >= 5,
+                dummy: !hasSequentialCharacters(password.toLowerCase())
             };
 
             // Update requirement indicators
@@ -245,13 +251,14 @@
             updateRequirementUI('number', checks.number);
             updateRequirementUI('special', checks.special);
             updateRequirementUI('unique', checks.unique);
+            updateRequirementUI('dummy', checks.dummy);
 
-            // Calculate strength score (0-6)
-            // Hinweis: Alle 6 Anforderungen müssen erfüllt sein für "sicher"
+            // Calculate strength score (0-7)
+            // Hinweis: Alle 7 Anforderungen müssen erfüllt sein für "sicher"
             const score = Object.values(checks).filter(Boolean).length;
             
             // Map score to steps (1-9)
-            const steps = score === 0 ? 0 : score === 1 ? 1 : score === 2 ? 2 : score === 3 ? 3 : score === 4 ? 5 : score === 5 ? 7 : 9;
+            const steps = score === 0 ? 0 : score === 1 ? 1 : score === 2 ? 2 : score === 3 ? 3 : score === 4 ? 4 : score === 5 ? 6 : score === 6 ? 8 : 9;
             
             // Update progress bar
             updateProgressBar(steps);
@@ -289,6 +296,32 @@
             progressFill.style.backgroundColor = color;
             strengthLabel.style.color = color;
             strengthLabel.textContent = label;
+        }
+
+        function hasSequentialCharacters(password) {
+            // Sequenzen auf der Tastatur definieren
+            const sequences = [
+                '123456789', '234567890',
+                'qwertyuiop', 'wertyuiop',
+                'asdfghjkl', 'sdfghjkl',
+                'zxcvbnm', 'xcvbnm',
+                // Rückwärts
+                '987654321', '098765432',
+                'poiuytrewq', 'poiuytrewq',
+                'lkjhgfdsa', 'lkjhgfdsa',
+                'mnbvcxz', 'mnbvcxz'
+            ];
+
+            const lowerPassword = password.toLowerCase();
+            
+            // Überprüfe alle Sequenzen
+            for (let seq of sequences) {
+                if (lowerPassword.includes(seq)) {
+                    return true; // Sequenz gefunden
+                }
+            }
+            
+            return false; // Keine Sequenz gefunden
         }
 
         // Initialize with empty state
